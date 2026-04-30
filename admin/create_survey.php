@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (empty($option_text)) continue;
 
                 $desired_count = $_POST['options'][$i]['desired_count'][$j] ?? 0;
-                $option_id = $_POST['option_ids'][$i][$j] ?? null;
+                $option_id = isset($_POST['option_ids'][$i][$j]) ? (int)$_POST['option_ids'][$i][$j] : null;
 
                 if ($option_id && in_array($option_id, $existing_option_ids)) {
                     // Bestehende Option aktualisieren
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title><?= $survey_id ? 'Umfrage bearbeiten' : 'Neue Umfrage erstellen' ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <script>
-    let questionCount = <?= isset($survey_id) ? $questions->num_rows : 0 ?>;
+    let questionCount = <?= isset($survey_id) ? $questions->num_rows : 1 ?>;
 
     function addQuestion() {
         const container = document.getElementById('questions-container');
@@ -181,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="question">
                         <label>Frage:</label>
                         <input type="text" name="questions[]" placeholder="Frage" required>
+                        <input type="hidden" name="question_ids[0]" value="">
 
                         <div class="options-container">
                             <div class="option">
