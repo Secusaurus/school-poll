@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Unauthorized Directory" 
+AuthUserFile /this_is_just_a_dummy/to_prevent/unathorized.using
+require user no_one
