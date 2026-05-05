@@ -54,6 +54,18 @@ h1, h2, h3 {
     font-weight: 500;
 }
 
+h1 {
+    padding-right: 80px;
+}
+
+h3 {
+    color: var(--secondary-color);
+}
+
+a {
+    color: var(--primary-color);
+}
+
 label {
     display: block;
     margin: 1rem 0 0.5rem;
@@ -121,6 +133,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
     margin-top: 0.5rem;
     text-decoration: none;
+    text-align: center;
 }
 
 .button:hover {
@@ -205,6 +218,65 @@ table p.description {
     list-style: none;
 }
 
+
+.stats-container {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+}
+
+.stat-item {
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+}
+
+
+.stat-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.progress-container {
+    position: relative;
+    height: 20px;
+    background-color: var(--surface-grey);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.stat-segment {
+    border-bottom: 1px solid var(--surface-grey);
+    margin-bottom: 1rem;
+}
+.stat-segment:last-of-type {
+    border-bottom: none;
+}
+
+hr {
+    margin: 2rem;
+}
+
+
+
+
 .yourinfo {
     background-color: var(--surface-hover);
     padding: 1.5rem;
@@ -268,12 +340,12 @@ table p.description {
     position: absolute;
     top: -10px;
     right: 20px;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background-color: var(--surface-grey);
     border-radius: 4px 4px 0 0;
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
-    padding: 8px;
+    padding: 2px;
     display: flex;
     align-items: center;
     justify-content: center;

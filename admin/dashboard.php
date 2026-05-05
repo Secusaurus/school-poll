@@ -73,10 +73,8 @@ function generateQRCode($url) {
                     <a href="view_responses.php?id=<?= $survey['id'] ?>" class="button">Anzeigen (<?= $survey['answercount'] ?> Stück)</a>
                 </td>
                 <td>
-                    <a href="../?id=<?= urlencode($survey['link']) ?>" target="_blank" class="button">Öffnen</a>
-                    <!--<div class="qr-code">
-                        <img src="<?= $qrCodeUrl ?>" alt="QR-Code für <?= htmlspecialchars($survey['title']) ?>" width="100">
-                    </div>-->
+                    <a href="../?id=<?= urlencode($survey['link']) ?>" target="_blank" class="button">Öffnen</a><br />
+                    <a href="<?= $qrCodeUrl ?>" target="_blank" class="button">QR-Code</a>
                 </td>
                 <td>
                     <a href="create_survey.php?id=<?= $survey['id'] ?>" class="button">Bearbeiten</a>
