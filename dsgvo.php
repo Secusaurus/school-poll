@@ -21,7 +21,7 @@ require_once 'config/config.php';
             <br><br>
             <?= $dsgvo_name ?><br>
             <?= $dsgvo_address ?><br>
-            E-Mail: <?= $dsgvo_mail ?>
+            E-Mail: <a href="mailto:<?= $dsgvo_mail ?>"><?= $dsgvo_mail ?></a>
         </p>
 
         <h2>2. Erhobene Daten und Zweck der Verarbeitung</h2>
