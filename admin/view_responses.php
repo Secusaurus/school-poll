@@ -28,7 +28,9 @@ $class_stats = $conn->query("
 $lines = [];
 
 $questions = $conn->query("SELECT * FROM ".$table_prefix."questions WHERE survey_id = $survey_id ORDER BY id");
+$questions_list = [];
 while ($question = $questions->fetch_assoc()) {
+    $questions_list[] = $question;
     $options = $conn->query("SELECT * FROM ".$table_prefix."options WHERE question_id = {$question['id']} ORDER BY id");
     while ($option = $options->fetch_assoc()) {
         $responses = $conn->query("
@@ -50,7 +52,6 @@ while ($question = $questions->fetch_assoc()) {
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -66,10 +67,9 @@ while ($question = $questions->fetch_assoc()) {
             <img src="../assets/images/logo.svg" alt="Logo">
         </div>
         <h1>Rückmeldungen: <?= htmlspecialchars($survey['title']) ?></h1>
-        <p><?= htmlspecialchars($survey['description']) ?></p>
-
+        <p class="description"><?= htmlspecialchars($survey['description']) ?></p>
         
-        <!-- Klassenstatistiken anzeigen -->
+
         <?php if ($class_stats->num_rows > 0): ?>
             <div class="class-stats">
                 <ul>
@@ -84,35 +84,84 @@ while ($question = $questions->fetch_assoc()) {
             </div>
         <?php endif; ?>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Frage</th>
-                    <th>Antwort</th>
-                    <th>Name</th>
-                    <th>Kontakt</th>
-                    <th>Kindername</th>
-                    <th>Schulklasse</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="stats-container">
+            <h2>Antwortstatistik</h2>
+            <?php foreach ($questions_list as $question): ?>
+                <h3><?= htmlspecialchars($question['question_text']) ?></h3>
                 <?php
-                foreach ($lines as $response)
-                {
+                // Optionen für diese Frage abfragen
+                $options = $conn->query("
+                    SELECT
+                        o.option_text,
+                        o.desired_count,
+                        COUNT(ro.id) AS answer_count
+                    FROM ".$table_prefix."options o
+                    LEFT JOIN ".$table_prefix."response_options ro ON o.id = ro.option_id
+                    WHERE o.question_id = {$question['id']}
+                    GROUP BY o.id
+                ");
                 ?>
-                <tr>
-                    <td><?= htmlspecialchars($response['question']) ?></td>
-                    <td><?= htmlspecialchars($response['answer']) ?></td>
-                    <td><?= htmlspecialchars($response['name']) ?></td>
-                    <td><?= htmlspecialchars($response['contact']) ?></td>
-                    <td><?= htmlspecialchars($response['child'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($response['class'] ?? '') ?></td>
-                </tr>
-                <?php
-                }
-                ?>
-            </tbody>
-        </table>
+                <div class="stat-segment">
+                    <?php while ($option = $options->fetch_assoc()): ?>
+                        <div class="stat-item">
+                            <div class="stat-label">
+                                <?= htmlspecialchars($option['option_text']) ?>:
+                                <?php
+                                    print($option['answer_count']) . " " . ($option['answer_count'] != 1 ? "Antworten" : "Antwort");
+                                ?>
+                                <?php if ($option['desired_count'] > 0): ?>
+                                    (Erforderlich: <?= $option['desired_count'] ?>)
+                                <?php endif; ?>
+                            </div>
+                            <?php if ($option['desired_count'] > 0): ?>
+                                <div class="progress-container">
+                                    <div class="progress-bar"
+                                        style="width: <?= min(100, ($option['answer_count'] / $option['desired_count']) * 100) ?>%">
+                                    </div>
+                                    <span class="progress-text">
+                                        <?= round(($option['answer_count'] / $option['desired_count']) * 100, 1) ?>%
+                                    </span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            <?php endforeach; ?>
+
+            <hr />
+        
+            <h2>Einzelne Antworten</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Frage</th>
+                        <th>Antwort</th>
+                        <th>Name</th>
+                        <th>Kontakt</th>
+                        <th>Kindername</th>
+                        <th>Schulklasse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($lines as $response)
+                    {
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($response['question']) ?></td>
+                        <td><?= htmlspecialchars($response['answer']) ?></td>
+                        <td><?= htmlspecialchars($response['name']) ?></td>
+                        <td><?= htmlspecialchars($response['contact']) ?></td>
+                        <td><?= htmlspecialchars($response['child'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($response['class'] ?? '') ?></td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
 
         <div class="submit-area">
             <a href="export.php?id=<?= $survey_id ?>" class="button">Als CSV exportieren</a>
