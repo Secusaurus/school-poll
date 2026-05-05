@@ -63,7 +63,7 @@ function generateQRCode($url) {
             </tr>
             <?php while ($survey = $surveys->fetch_assoc()): ?>
                 <?php
-                $surveyUrl = "https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/?id=" . urlencode($survey['link']);
+                $surveyUrl = "https://" . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['PHP_SELF'])) . "?id=" . urlencode($survey['link']);
                 $qrCodeUrl = generateQRCode($surveyUrl);
                 ?>
             <tr>
