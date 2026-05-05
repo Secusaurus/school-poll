@@ -59,8 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $child_name = $_POST['child_name'] ?? null;
     $child_class = $_POST['child_class'] ?? null;
 
-    print ("INSERT INTO ".$table_prefix."responses (survey_id, email, name, child_name, class) VALUES ({$survey['id']}, '$email', '$name', '$child_name', '$child_class')");
-
     // Antworten speichern
     $conn->query("INSERT INTO ".$table_prefix."responses (survey_id, email, name, child_name, class) VALUES ({$survey['id']}, '$email', '$name', '$child_name', '$child_class')");
     $response_id = $conn->insert_id;
